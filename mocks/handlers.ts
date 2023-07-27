@@ -1,11 +1,26 @@
 import { rest } from 'msw'
 
 export const handlers = [
-  rest.get('https://jsonplaceholder.com/api/docs_list', (req, res, ctx) => {
+  rest.get('https://jsonplaceholder.typicode.com/posts', (req, res, ctx) => {
     const data = [
-      { name: 'Redux Toolkit', url: 'https://redux-toolkit.js.org/' },
-      { name: 'MSW', url: 'https://mswjs.io/' },
-      { name: 'Tailwind CSS', url: 'https://tailwindcss.com/' },
+      {
+        id: 1,
+        userId: 1,
+        title: 'Hello world 1',
+        body: 'body 1',
+      },
+      {
+        id: 2,
+        userId: 2,
+        title: 'Hello world 2',
+        body: 'body 2',
+      },
+      {
+        id: 3,
+        userId: 3,
+        title: 'Hello world 3',
+        body: 'body 3',
+      },
     ]
 
     return res(ctx.status(200), ctx.json(data))

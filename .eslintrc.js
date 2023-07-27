@@ -65,11 +65,14 @@ module.exports = {
     'prefer-const': 'warn',
     'prettier/prettier': [
       'warn',
-      {},
+      'error',
       {
         properties: {
           usePrettierrc: true,
         },
+      },
+      {
+        endOfLine: 'auto',
       },
     ],
     radix: 'error',

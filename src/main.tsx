@@ -5,25 +5,11 @@ import { Provider } from 'react-redux'
 import './index.css'
 import App from './App'
 import { store } from './store'
-
+import 'devextreme/dist/css/dx.light.css'
 const root = ReactDOM.createRoot(document.getElementById('root')!)
 
-if (process.env.NODE_ENV === 'development') {
-  import('../mocks/browser')
-    .then(({ worker }) => {
-      worker.start()
-    })
-    .then(() => {
-      root.render(
-        <Provider store={store}>
-          <App />
-        </Provider>
-      )
-    })
-} else {
-  root.render(
-    <Provider store={store}>
-      <App />
-    </Provider>
-  )
-}
+root.render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+)

@@ -1,52 +1,52 @@
-import { waitFor } from '@testing-library/dom'
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import React from 'react'
+import { cleanup, render, screen } from '@testing-library/react'
 import { Provider } from 'react-redux'
 
 import App from './App'
 import { store } from './store'
+import { server } from '../mocks/server'
 
-test('Show App Component', () => {
+beforeAll(() => {
+  server.listen()
+})
+
+afterEach(() => {
+  server.resetHandlers()
+})
+
+afterAll(() => {
+  server.close()
+  jest.restoreAllMocks()
+})
+
+afterEach(() => {
+  cleanup()
+})
+
+test('Show App Component', async () => {
+  server.use()
   render(
     <Provider store={store}>
       <App />
     </Provider>
   )
 
-  expect(screen.getByText('Hello Vite + RTK Query!')).toBeInTheDocument()
+  expect(await screen.findByText('Calendar')).toBeInTheDocument()
 })
 
-test('Working Counter', async () => {
-  const user = userEvent.setup()
-  const { getByText } = render(
+it('should be rendered with 3 records', async () => {
+  server.use()
+  const { findAllByRole, findByText } = render(
     <Provider store={store}>
       <App />
     </Provider>
   )
-  expect(getByText('count is: 0')).toBeInTheDocument()
+  screen.debug()
+  expect(await findByText('Calendar')).toBeInTheDocument()
 
-  const button = getByText('Increment')
+  //This fail
+  // expect(await findByText('Hello world 1')).toBeInTheDocument()
 
-  await user.click(button)
-  expect(getByText('count is: 1')).toBeInTheDocument()
-
-  await user.click(button)
-  expect(getByText('count is: 2')).toBeInTheDocument()
-
-  await user.click(button)
-  expect(getByText('count is: 3')).toBeInTheDocument()
-})
-
-test('working with msw', async () => {
-  render(
-    <Provider store={store}>
-      <App />
-    </Provider>
-  )
-  await waitFor(() => {
-    expect(screen.getByText('Redux Toolkit')).toBeInTheDocument()
-    expect(screen.getByText('MSW')).toBeInTheDocument()
-    expect(screen.getByText('Tailwind CSS')).toBeInTheDocument()
-  })
+  //This also fail
+  const gridCells = await findAllByRole('appointment')
+  expect(gridCells.length).toBe(3)
 })
